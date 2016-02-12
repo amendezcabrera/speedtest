@@ -1,3 +1,8 @@
+##
+## Originally created by https://www.reddit.com/user/AlekseyP
+## Seen at: https://www.reddit.com/r/technology/comments/43fi39/i_set_up_my_raspberry_pi_to_automatically_tweet
+##
+
 #!/usr/bin/python
 import os
 import sys
