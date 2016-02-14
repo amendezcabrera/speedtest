@@ -10,7 +10,7 @@ import csv
 import datetime
 import time
 import twitter
- 
+
 #Configuration
 # Twitter
 ACCESS_TOKEN=""
@@ -20,10 +20,11 @@ CONSUMER_SECRET=""
 # Minimum network speed
 min_net_speed = 10
 # Speedtest client absolute path
-speedtest_path = "/home/pi/Scripts/SpeedTest/speedtest-cli"
+speedtest_path = "/home/alberto/Desarrollo/Proyectos/Scripts/SpeedTest/speedtest-cli"
+csv_output_file_path = "/home/alberto/Desarrollo/Proyectos/Scripts/SpeedTest/"
 
 def test():
- 
+
         #run speedtest-cli
         print 'running test'
         a = os.popen("python %s --simple"%(speedtest_path)).read()
@@ -45,36 +46,36 @@ def test():
                 u = lines[2][8:12]
         print date,p, d, u
         #save the data to file for local network plotting
-      ##  out_file = open('/var/www/assets/data.csv', 'a')
-      ##  writer = csv.writer(out_file)
-      ##  writer.writerow((ts*1000,p,d,u))
-      ##  out_file.close()
- 
+        out_file = open(csv_output_file_path + 'data.csv', 'a')
+        writer = csv.writer(out_file)
+        writer.writerow((ts*1000,p,d,u))
+        out_file.close()
+
         my_auth = twitter.OAuth(ACCESS_TOKEN,ACCESS_TOKEN_SECRET,CONSUMER_KEY,CONSUMER_SECRET)
         twit = twitter.Twitter(auth=my_auth)
- 
+
         #try to tweet if speedtest couldnt even connet. Probably wont work if the internet is down
         if "Cannot" in a:
                 try:
                         tweet="Hey @Comcast @ComcastCares why is my internet down? I pay for 150down\\10up in Washington DC? #comcastoutage #comcast"
-                        twit.statuses.update(status=tweet)
-##			print tweet
+                    ##    twit.statuses.update(status=tweet)
+			            print tweet
                 except:
                         pass
- 
+
         # tweet if down speed is less than whatever I set
         elif eval(d)<min_net_speed:
                 print "trying to tweet"
                 try:
                         # i know there must be a better way than to do (str(int(eval())))
                         tweet="Hey @Comcast why is my internet speed " + str(int(eval(d))) + "down\\" + str(int(eval(u))) + "up when I pay for 150down\\10up in Washington DC? @ComcastCares @xfinity #comcast #speedtest"
-                        twit.statuses.update(status=tweet)
-##			print tweet
+                    ##    twit.statuses.update(status=tweet)
+			            print tweet
                 except Exception,e:
                         print str(e)
                         pass
         return
-       
+
 if __name__ == '__main__':
         test()
         print 'completed'
